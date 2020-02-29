@@ -23,7 +23,8 @@ window.onload = () => {
     }
     function updateDisplay() {
         const display = document.querySelector('.calculator-screen');
-        display.value = calculator.displayValue;
+        let toDisplay = calculator.displayValue;
+        display.value = parseFloat(toDisplay);
     }
 
     updateDisplay();
@@ -61,7 +62,12 @@ keys.addEventListener('click', (event) => {
 
     if (target.classList.contains('decimal')) {
         console.log('decimal', target.value);
-        return;
+        if (calculator.firstOperand === null || calculator.secondOperand === null) {
+            calculator.displayValue = '0.'
+            updateDisplay();
+            return;
+        }
+
     }
 
     if (target.classList.contains('equal-sign')) {
