@@ -14,25 +14,13 @@ window.onload = () => {
         const {displayValue, firstOperand} = calculator;
 
         if (firstOperand === null) {
-            calculator.displayValue = (displayValue === '0' ) ? digit : displayValue + digit;
+            calculator.displayValue = (displayValue === '0' || '' ) ? digit : displayValue + digit;
         }
         if (firstOperand !== null) {
 
             calculator.displayValue =  displayValue + digit;
         }
-
-
-        // // Overwrite `displayValue` if the current value is '0' otherwise append to it
-        // if (displayValue === '0' && firstOperand === null) {
-        //     calculator.displayValue = digit
-        // } else if (displayValue !== '0' && firstOperand === null) {
-        //     calculator.displayValue =  displayValue + digit;
-        // } else if (firstOperand !== null) {
-        //     calculator.displayValue =  displayValue + digit;
-        // }
-
     }
-
     function updateDisplay() {
         const display = document.querySelector('.calculator-screen');
         display.value = calculator.displayValue;
@@ -48,29 +36,44 @@ keys.addEventListener('click', (event) => {
     }
 
     if (target.classList.contains('operator')) {
-        const {firstOperand, secondOperand, operator, displayValue} = calculator;
         if (calculator.operator === null ) {
             calculator.operator = target.value;
-            calculator.firstOperand = displayValue;
+            calculator.firstOperand = calculator.displayValue;
             calculator.displayValue = '';
             console.log(calculator);
+            console.log('operator', target.value);
+            return;
         } else {
-            calculator.secondOperand = displayValue;
-            console.log('operator', operator)
-            console.log('first',calculator.firstOperand)
-            console.log('second',calculator.secondOperand)
-            calculator.displayValue = eval( `${firstOperand} ${operator} ${secondOperand}`)
-            console.log(eval( `${firstOperand} ${operator} ${secondOperand}`))
-            console.log(calculator.displayValue)
-            console.log(calculator)
-
+            let evalResult;
+            console.log(calculator.operator)
+            calculator.secondOperand = calculator.displayValue;
+            evalResult = eval( `${calculator.firstOperand}  ${calculator.operator}  ${calculator.secondOperand}`)
+            calculator.displayValue = evalResult;
+            calculator.firstOperand = evalResult
+            calculator.secondOperand = null;
+            calculator.operator = target.value;
+            updateDisplay();
+            calculator.displayValue = '';
+            return;
         }
-        console.log('operator', target.value);
-        return;
+
     }
 
     if (target.classList.contains('decimal')) {
         console.log('decimal', target.value);
+        return;
+    }
+
+    if (target.classList.contains('equal-sign')) {
+        let result;
+        let secondOperand = calculator.displayValue;
+        result = eval( `${calculator.firstOperand}  ${calculator.operator}  ${secondOperand}`);
+        calculator.displayValue = result;
+        updateDisplay();
+        calculator.firstOperand =  result;
+        calculator.secondOperand = null;
+        calculator.operator = null;
+        console.log('after equal sign:', calculator)
         return;
     }
 
@@ -91,3 +94,4 @@ keys.addEventListener('click', (event) => {
 });
 
 }
+
