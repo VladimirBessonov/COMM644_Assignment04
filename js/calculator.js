@@ -7,7 +7,6 @@ let calculator = {
 };
 
 const worker = new Worker('js/calc-worker.js')
-
 const calcInit = { ...calculator}
 
 window.onload = () => {

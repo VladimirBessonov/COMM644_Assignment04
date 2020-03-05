@@ -11,9 +11,6 @@ function fibonacci(num){
 }
 
 this.addEventListener('message', (e) => {
-    console.log('received', e.data)
     const result = fibonacci(e.data)
-    //  const result = e.data
-    console.log(result)
     postMessage(result)
 })
