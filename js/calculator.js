@@ -6,6 +6,8 @@ let calculator = {
     secondOperand: null,
 };
 
+const worker = new Worker('js/calc-worker.js')
+
 const calcInit = { ...calculator}
 
 window.onload = () => {
@@ -41,12 +43,9 @@ keys.addEventListener('click', (event) => {
             calculator.operator = target.value;
             calculator.firstOperand = calculator.displayValue;
             calculator.displayValue = '';
-            console.log(calculator);
-            console.log('operator', target.value);
             return;
         } else {
             let evalResult;
-            console.log(calculator.operator)
             calculator.secondOperand = calculator.displayValue;
             evalResult = eval( `${calculator.firstOperand}  ${calculator.operator}  ${calculator.secondOperand}`)
             calculator.displayValue = evalResult;
@@ -87,6 +86,20 @@ keys.addEventListener('click', (event) => {
     //
     //     return;
     // }
+
+    if (target.classList.contains('fib')) {
+        if (calculator.displayValue) {
+            worker.postMessage(calculator.displayValue)
+            worker.onmessage = (e) => {
+                alert(`result of Fibonacci calc is: ${e.data}`)
+            }
+        }
+        console.log('fib is clicked', target.value);
+        return;
+    }
+
+
+
 
     if (target.classList.contains('all-clear')) {
         calculator = { ...calcInit}
